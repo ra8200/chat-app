@@ -54,9 +54,7 @@ const LoginScreen = ({ navigation }) => {  // We can access navigation from prop
         type='outline'
         onPress={() => navigation.navigate('Register')}  // This is how we navigate to another screen
         title='Register'
-        color={{
-          color: '#2C6BED'
-        }}
+        color={{ color: '#2C6BED' }}
       />
       <View style={{ height: 100 }} />
     </KeyboardAvoidingView>
