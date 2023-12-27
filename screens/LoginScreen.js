@@ -1,14 +1,23 @@
 import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Button, Input, Image } from '@rneui/themed';
 import { StatusBar } from 'expo-status-bar';
+import { auth } from '../firebase';
 
-const LoginScreen = ({ navigation }) => {  // We can access navigation from props. this is what you need to navigate to another screen
+const LoginScreen = ({ navigation }) => { 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  useEffect(() => {
+    auth.onAuthStateChanged((authUser) => {
+      if(authUser) {
+        navigation.replace('Home'); 
+      }
+    })
+  }, []);
+
   const signIn = () => {
-    // some sign in logic...
+    
   };
 
   return (

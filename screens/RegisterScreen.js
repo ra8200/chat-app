@@ -1,8 +1,9 @@
-import { KeyboardAvoidingView, StyleSheet, Text, View } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet, Text, View, Animated } from 'react-native'
 import React, { useLayoutEffect, useState } from 'react';
 import { StatusBar } from 'expo-status-bar';
 import { Button, Input } from '@rneui/themed';
 import { auth } from '../firebase';
+import { createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 
 const RegisterScreen = ({ navigation }) => {
     const [name, setName] = useState('');
@@ -15,17 +16,28 @@ const RegisterScreen = ({ navigation }) => {
             headerBackTitle: 'Login',
         });
     }, [navigation]);
-    
+
+    const av = new Animated.Value(0);
+    av.addListener(() => {return});
+                              
     const register = () => {
-        auth
-            .createUserWithEmailAndPassword(email, password)
-            .then((authUser) => {
-                authUser.user.updateProfile({
-                    displayName: name,
-                    photoURL: imageUrl || 'https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png',
-                });
+        createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+            const user = userCredential.user;
+            updateProfile(user, {
+                displayName: name,
+                photoURL: imageUrl || 'https://cencup.com/wp-content/uploads/2019/07/avatar-placeholder.png',
             })
-            .catch((error) => alert(error.message));
+            .then(() => {
+                navigation.replace('Home');
+                alert("User created successfully!")
+            }).catch((error) => {});
+            
+        }).catch((error) => {
+            const errorCode = error.code;
+            const errorMessage = error.message;
+            alert(errorCode, errorMessage);
+        });
     };   
 
   return (
@@ -35,7 +47,7 @@ const RegisterScreen = ({ navigation }) => {
         style={styles.container}
     >
         <StatusBar style='auto' />
-        <Text h3 style={styles.create}>
+        <Text style={styles.create}>
             Create a Chatty Account
         </Text>
 
@@ -64,7 +76,7 @@ const RegisterScreen = ({ navigation }) => {
                 placeholder='Profile Picture URL (optional)'
                 type='text'
                 value={imageUrl}
-                onChange={(imageUrl) => setImageUrl(imageUrl)}
+                onChangeText={(imageUrl) => setImageUrl(imageUrl)}
                 onSubmitEditing={register}
             />
         </View>
@@ -78,6 +90,7 @@ const RegisterScreen = ({ navigation }) => {
             }}
         />
         <View style={{ height: 100 }} />    
+        
     </KeyboardAvoidingView>
   )
 }
@@ -95,7 +108,7 @@ const styles = StyleSheet.create({
     button: {
         width: 200,
         marginTop: 10,
-        borderRadius: 10,
+        borderRadius: 20,
     },
     create: {
         marginBottom: 30,
@@ -104,5 +117,7 @@ const styles = StyleSheet.create({
     },
     inputContainer: {
         width: 300,
+        borderRadius: 10,
+        marginBottom: 10,
     },
 });
