@@ -1,5 +1,5 @@
-import { StyleSheet, View, KeyboardAvoidingView, Platform } from 'react-native';
-import React, { useEffect, useState } from 'react';
+import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
+import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Button, Input, Image } from '@rneui/themed';
 import { StatusBar } from 'expo-status-bar';
 import { auth } from '../firebase';
@@ -9,15 +9,26 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState('');
 
   useEffect(() => {
-    auth.onAuthStateChanged((authUser) => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      console.log(authUser);
       if(authUser) {
         navigation.replace('Home'); 
       }
-    })
+    });
+
+    return unsubscribe;
   }, []);
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: "Welcome to Signal",
+    });
+  }, [navigation]);
+
   const signIn = () => {
-    
+    auth.signInWithEmailAndPassword(email, password).catch((error) => {
+      alert(error);
+    });
   };
 
   return (
