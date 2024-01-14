@@ -1,7 +1,7 @@
 import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Button, Input, Image } from '@rneui/themed';
-import { StatusBar } from 'expo-status-bar';
+import { StatusBar } from 'expo-status-bar'; 
 import { auth } from '../firebase';
 
 const LoginScreen = ({ navigation }) => { 
@@ -39,7 +39,7 @@ const LoginScreen = ({ navigation }) => {
     >
       <StatusBar style='auto' />
       <Image 
-        source={require('../assets/logo.png')}
+        source={require('../assets/chattylogo.png')}
         alt='Logo'
         style={styles.logo} 
       />

@@ -11,7 +11,6 @@ import { auth, db } from '../firebase'
 import { Avatar } from '@rneui/themed'
 
 const HomeScreen = ({ navigation }) => {
-
  useLayoutEffect(() => {
    navigation.setOptions({
      title: "Chatty",
@@ -21,12 +20,7 @@ const HomeScreen = ({ navigation }) => {
      headerLeft: () => (
        <View style={{ marginLeft: 20 }}>
          <TouchableOpacity>
-           <Avatar
-             rounded
-             source={{
-               uri: auth?.currentUser?.photoURL
-             }}
-           />
+           <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
          </TouchableOpacity>
        </View>
      ),
