@@ -13,7 +13,7 @@ const RegisterScreen = ({ navigation }) => {
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            title: "Add a new Chat",
+            title: "Create a Chatty Account",
             headerBackTitle: 'Login',
         });
     }, [navigation]);

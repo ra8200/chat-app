@@ -21,7 +21,7 @@ const LoginScreen = ({ navigation }) => {
 
   useLayoutEffect(() => {
     navigation.setOptions({
-      title: "Welcome to Signal",
+      title: "Welcome to Chatty!",
     });
   }, [navigation]);
 
@@ -49,7 +49,7 @@ const LoginScreen = ({ navigation }) => {
           autoFocus 
           type='email' 
           value={email} 
-          onChange={(text) => setEmail(text)}
+          onChangeText={setEmail}
           style={styles.input}
         />
         <Input 
@@ -57,7 +57,7 @@ const LoginScreen = ({ navigation }) => {
           secureTextEntry 
           type='password' 
           value={password} 
-          onChange={(text) => setPassword(text)}
+          onChangeText={setPassword}
           style={styles.input}
         />
       </View>
