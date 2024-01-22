@@ -1,8 +1,15 @@
 import { initializeApp } from 'firebase/app';
-import { getAuth, setPersistence, browserSessionPersistence, inMemoryPersistence } from 'firebase/auth';
+import { 
+    getAuth, 
+    setPersistence, 
+    browserSessionPersistence, 
+    inMemoryPersistence, 
+    signInWithEmailAndPassword, // Import signInWithEmailAndPassword
+    initializeAuth, 
+    getReactNativePersistence 
+} from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { initializeAuth, getReactNativePersistence } from 'firebase/auth';
 
 const firebaseConfig = {
     apiKey: "AIzaSyA2yd_XXz84BXJqV_oceQn8aTUQ2wWAZC8",
@@ -16,12 +23,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 let auth;
 
-// Set persistence based on the platform
 if (typeof document !== 'undefined') {
     // Web environment
     auth = getAuth(app);
     setPersistence(auth, browserSessionPersistence);
 } else {
+    // React Native environment
     auth = initializeAuth(app, {
       persistence: getReactNativePersistence(AsyncStorage)
     });
@@ -29,4 +36,5 @@ if (typeof document !== 'undefined') {
 
 const db = getFirestore(app);
 
-export { db, auth };
+// Exporting the necessary Firebase services and functions
+export { db, auth, signInWithEmailAndPassword };

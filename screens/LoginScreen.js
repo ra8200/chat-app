@@ -2,7 +2,7 @@ import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Button, Input, Image } from '@rneui/themed';
 import { StatusBar } from 'expo-status-bar'; 
-import { auth } from '../firebase';
+import { auth, signInWithEmailAndPassword } from '../firebase'; // Import signInWithEmailAndPassword
 
 const LoginScreen = ({ navigation }) => { 
   const [email, setEmail] = useState('');
@@ -26,8 +26,12 @@ const LoginScreen = ({ navigation }) => {
   }, [navigation]);
 
   const signIn = () => {
-    auth.signInWithEmailAndPassword(email, password).catch((error) => {
-      alert(error);
+    signInWithEmailAndPassword(auth, email, password)
+    .then((authUser) => {
+      navigation.replace('Home');
+    })
+    .catch((error) => {
+      alert(error.message);
     });
   };
 
