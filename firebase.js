@@ -1,13 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { 
-    getAuth, 
-    setPersistence, 
-    browserSessionPersistence, 
-    inMemoryPersistence, 
-    signInWithEmailAndPassword, // Import signInWithEmailAndPassword
-    initializeAuth, 
-    getReactNativePersistence 
-} from 'firebase/auth';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -25,12 +17,13 @@ let auth;
 
 if (typeof document !== 'undefined') {
     // Web environment
-    auth = getAuth(app);
-    setPersistence(auth, browserSessionPersistence);
+    auth = firebaseAuth.getAuth(app);
+    firebaseAuth.setPersistence(auth, firebaseAuth.browserSessionPersistence);
 } else {
     // React Native environment
-    auth = initializeAuth(app, {
-      persistence: getReactNativePersistence(AsyncStorage)
+    const reactNativePersistence = firebaseAuth.getReactNativePersistence;
+    auth = firebaseAuth.initializeAuth(app, {
+      persistence: reactNativePersistence(AsyncStorage)
     });
 }
 

@@ -3,7 +3,7 @@ import {
   ScrollView, 
   SafeAreaView, 
   View, 
-  TouchableOpacity 
+  Pressable 
 } from 'react-native'
 import React, { useLayoutEffect, useEffect, useState } from 'react'
 import CustomListItem from '../components/CustomListItem'
@@ -26,9 +26,9 @@ const HomeScreen = ({ navigation }) => {
      headerTintColor: "black",
      headerLeft: () => (
        <View style={{ marginLeft: 20 }}>
-         <TouchableOpacity onPress={signOutUser} activeOpacity={0.5}>
+         <Pressable onPress={signOutUser} activeOpacity={0.5}>
            <Avatar rounded source={{ uri: auth?.currentUser?.photoURL }} />
-         </TouchableOpacity>
+         </Pressable>
        </View>
      ),
    });
