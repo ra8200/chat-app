@@ -2,7 +2,8 @@ import { StyleSheet, View, KeyboardAvoidingView } from 'react-native';
 import React, { useEffect, useState, useLayoutEffect } from 'react';
 import { Button, Input, Image } from '@rneui/themed';
 import { StatusBar } from 'expo-status-bar'; 
-import { auth, signInWithEmailAndPassword } from '../firebase'; // Import signInWithEmailAndPassword
+import { auth } from '../firebase'; // Import signInWithEmailAndPassword
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 const LoginScreen = ({ navigation }) => { 
   const [email, setEmail] = useState('');
