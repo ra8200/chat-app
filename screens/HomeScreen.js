@@ -10,6 +10,7 @@ import CustomListItem from '../components/CustomListItem'
 import { auth, db } from '../firebase'
 import { Avatar } from '@rneui/themed'
 import { AntDesign, SimpleLineIcons } from "@expo/vector-icons";
+import { collection, query, onSnapshot } from 'firebase/firestore';
 
 const HomeScreen = ({ navigation }) => {
   const [chats, setChats] = useState([])
@@ -21,9 +22,9 @@ const HomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = db.collection('chats').onSnapshot((snapshot) =>
-      setChats(
-        snapshot.docs.map((doc) => ({
+    const q = query(collection(db, 'chats'));
+    const unsubscribe = onSnapshot(q, (snapshot) =>
+      setChats(snapshot.docs.map((doc) => ({
           id: doc.id,
           data: doc.data(),
         }))
@@ -70,7 +71,9 @@ const HomeScreen = ({ navigation }) => {
   return (
     <SafeAreaView>
       <ScrollView>
-        <CustomListItem />
+        {chats.map(({id, data: { chatName }}) => (
+          <CustomListItem key={id} id={id} chatName={chatName} />
+        ))}
       </ScrollView>
     </SafeAreaView>
   )
