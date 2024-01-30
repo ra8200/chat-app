@@ -15,7 +15,8 @@ import React, { useLayoutEffect, useState } from 'react'
 import { Avatar } from '@rneui/themed'
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons'
 import { db } from '../firebase'
-import { collection, query, orderBy, onSnapshot, doc } from 'firebase/firestore';
+import * as firebase from 'firebase';
+import { collection, query, orderBy, onSnapshot, doc, Timestamp } from 'firebase/firestore';
 
 
 const ChatScreen = ({navigation, route}) => {
@@ -80,10 +81,6 @@ const ChatScreen = ({navigation, route}) => {
     })
   }, [navigation, messages])
 
-  const sendMessage = async () => {
-    Keyboard.dismiss();
-  }
-
   // useLayoutEffect(() => {
   //   const messagesRef = collection(db, 'chats', route.params.id, 'messages');
   //   const q = query(messagesRef, orderBy('timestamp', 'desc'));
@@ -98,11 +95,26 @@ const ChatScreen = ({navigation, route}) => {
   //   return unsubscribe;
   // }, [route]);
 
+  const sendMessage = async () => {
+    Keyboard.dismiss();
+
+    db.collection('chats').doc(route.params.id).collection('messages').add({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      message: input,
+      displayName: auth.currentUser.displayName,
+      email: auth.currentUser.email,
+      photoURL: auth.currentUser.photoURL
+    })
+
+    setInput(''); 
+  };
+
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
       <StatusBar style="light"/>
       <KeyboardAvoidingView
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
+        behavior= {Platform.OS === "ios" ? "padding" : "height"}
+        enabled
         style={styles.container}
         keyboardVerticalOffset={90}
       >
@@ -133,46 +145,49 @@ export default ChatScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: "center",
+    // justifyContent: "center",
+  
   },
-  // sender: {
-  //   padding: 15,
-  //   backgroundColor: "#2B68E6",
-  //   alignSelf: "flex-start",
-  //   borderRadius: 20,
-  //   margin: 15,
-  //   maxWidth: "80%",
-  //   position: "relative",
-  // },
-  // senderText: {
-  //   color: "white",
-  //   fontWeight: "500",
-  //   marginLeft: 10,
-  //   marginBottom: 15,
-  // },
-  // senderName: {
-  //   left: 10,
-  //   paddingRight: 10,
-  //   fontSize: 10,
-  //   color: "white",
-  // },
-  // receiver: {
-  //   padding: 15,
-  //   backgroundColor: "#ECECEC",
-  //   alignSelf: "flex-end",
-  //   borderRadius: 20,
-  //   marginRight: 15,
-  //   marginBottom: 20,
-  //   maxWidth: "80%",
-  //   position: "relative",
-  // },
-  // receiverText: {
-  //   color: "black",
-  //   fontWeight: "500",
-  //   marginLeft: 10,
-  // },
-  // inner: {
-  //   paddingTop: 15,
-  // },
+  sender: {
+    padding: 15,
+    backgroundColor: "#2B68E6",
+    alignSelf: "flex-start",
+    borderRadius: 20,
+    margin: 15,
+    maxWidth: "80%",
+    position: "relative",
+  },
+  senderText: {
+    color: "white",
+    fontWeight: "500",
+    marginLeft: 10,
+    marginBottom: 15,
+  },
+  senderName: {
+    left: 10,
+    paddingRight: 10,
+    fontSize: 10,
+    color: "white",
+  },
+  receiver: {
+    padding: 15,
+    backgroundColor: "#ECECEC",
+    alignSelf: "flex-end",
+    borderRadius: 20,
+    marginRight: 15,
+    marginBottom: 20,
+    maxWidth: "80%",
+    position: "relative",
+  },
+  receiverText: {
+    color: "black",
+    fontWeight: "500",
+    marginLeft: 10,
+  },
+  inner: {
+    paddingTop: 15,
+  },
   footer: {
     flexDirection: "row",
     alignItems: "center",
@@ -189,8 +204,8 @@ const styles = StyleSheet.create({
     color: "grey",
     borderRadius: 30,
   },
-  // btnContainer: {
-  //   backgroundColor: "white",
-  //   marginTop: 12,
-  // },
+  btnContainer: {
+    backgroundColor: "white",
+    marginTop: 12,
+  },
 })
