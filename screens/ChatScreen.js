@@ -14,9 +14,8 @@ import {
 import React, { useLayoutEffect, useState } from 'react'
 import { Avatar } from '@rneui/themed'
 import { AntDesign, FontAwesome, Ionicons } from '@expo/vector-icons'
-import { db } from '../firebase'
-import * as firebase from 'firebase';
-import { collection, query, orderBy, onSnapshot, doc, Timestamp } from 'firebase/firestore';
+import { db, auth } from '../firebase'
+import { collection, query, orderBy, onSnapshot, addDoc, serverTimestamp } from 'firebase/firestore';
 
 
 const ChatScreen = ({navigation, route}) => {
@@ -81,33 +80,39 @@ const ChatScreen = ({navigation, route}) => {
     })
   }, [navigation, messages])
 
-  // useLayoutEffect(() => {
-  //   const messagesRef = collection(db, 'chats', route.params.id, 'messages');
-  //   const q = query(messagesRef, orderBy('timestamp', 'desc'));
-
-  //   const unsubscribe = onSnapshot(q, (snapshot) => {
-  //     setMessages(snapshot.docs.map(doc => ({
-  //       id: doc.id,
-  //       data: doc.data()
-  //     })
-  //   ))
-  
-  //   return unsubscribe;
-  // }, [route]);
-
   const sendMessage = async () => {
     Keyboard.dismiss();
+  
+    const messagesRef = collection(db, 'chats', route.params.id, 'messages');
 
-    db.collection('chats').doc(route.params.id).collection('messages').add({
-      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-      message: input,
-      displayName: auth.currentUser.displayName,
-      email: auth.currentUser.email,
-      photoURL: auth.currentUser.photoURL
-    })
+    try {
+      await addDoc(messagesRef, {
+        timestamp: serverTimestamp(),
+        message: input,
+        displayName: auth.currentUser.displayName,
+        email: auth.currentUser.email,
+        photoURL: auth.currentUser.photoURL
+      });
 
-    setInput(''); 
+      setInput('');
+    } catch (error) {
+      console.error("Error adding message: ", error);
+    }
   };
+
+  useLayoutEffect(() => {
+    const messagesRef = collection(db, 'chats', route.params.id, 'messages');
+    const q = query(messagesRef, orderBy('timestamp', 'desc'));
+  
+    const unsubscribe = onSnapshot(q, (snapshot) => {
+      setMessages(snapshot.docs.map(doc => ({
+        id: doc.id,
+        data: doc.data()
+      })));
+    });
+  
+    return unsubscribe;
+  }, [route]);
 
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
@@ -120,7 +125,21 @@ const ChatScreen = ({navigation, route}) => {
       >
         <Pressable onPress={Keyboard.dismiss}>
           <>
-            <ScrollView>{/* Chat Goes Here */}</ScrollView>
+            <ScrollView>
+              {messages.map(({ id, data }) => (
+                data.email === auth.currentUser.email ? (
+                  <View key={id}>
+                    <Avatar />
+                    <Text style={styles.receiverText}>{data.message}</Text>
+                  </View>
+                ) : (
+                  <View>
+                    <Avatar />
+                    <Text style={styles.senderText}>{data.message}</Text>
+                  </View>
+                )
+              ))}
+            </ScrollView>
             <View style={styles.footer}>
               <TextInput 
                 placeholder="Chatty Message"
@@ -138,7 +157,7 @@ const ChatScreen = ({navigation, route}) => {
       </KeyboardAvoidingView>
     </SafeAreaView>
   )
-};
+}
 
 export default ChatScreen;
 
