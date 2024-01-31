@@ -1,6 +1,8 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React, {useState, useEffect} from 'react'
 import { Avatar, ListItem } from '@rneui/themed'
+import { db } from '../firebase'
+import { collection, query, orderBy, onSnapshot, addDoc } from 'firebase/firestore';
 
 const CustomListItem = ({ id, chatName, enterChat, messages }) => {
   const [chatMessages, setChatMessages] = useState([]);
