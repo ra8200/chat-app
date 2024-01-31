@@ -37,7 +37,8 @@ const ChatScreen = ({navigation, route}) => {
           <Avatar 
             rounded 
             source={{
-              uri: 'https://vectorified.com/images/default-user-icon-34.png',
+              uri: 
+              messages[0]?.data.photoURL
             }} 
           />
           <Text
@@ -146,7 +147,7 @@ const ChatScreen = ({navigation, route}) => {
                     <Text style={styles.receiverText}>{data.message}</Text>
                   </View>
                 ) : (
-                  <View style={styles.sender}>
+                  <View key={id} style={styles.sender}>
                     <Avatar
                       position="absolute"
                       rounded

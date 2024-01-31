@@ -1,14 +1,34 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import { Avatar, ListItem } from '@rneui/themed'
 
-const CustomListItem = ({ id, chatName, enterChat }) => {
+const CustomListItem = ({ id, chatName, enterChat, messages }) => {
+  const [chatMessages, setChatMessages] = useState([]);
+
+  useEffect(() =>{
+    const unsubscribe = db
+      .collection('chats')
+      .doc(id).collection('messages')
+      .orderBy('timestamp', 'desc')
+      .onSnapshot(snapshot => 
+        setChatMessages(snapshot.docs.map(doc => doc.data()))
+      );
+    return unsubscribe;
+  });
+
+
   return (
-    <ListItem onPress={() => enterChat(id, chatName)} key={id} bottomDivider >
+    <ListItem 
+      key={id}
+      onPress={() => enterChat(id, chatName)} 
+      bottomDivider 
+    >
       <Avatar
         rounded
         source={{
-          uri: 'https://vectorified.com/images/default-user-icon-34.png',
+          uri:
+            chatMessages[0]?.data.photoURL ||
+            'https://vectorified.com/images/default-user-icon-34.png',
         }}
       />
       <ListItem.Content>
@@ -16,7 +36,7 @@ const CustomListItem = ({ id, chatName, enterChat }) => {
           {chatName}
         </ListItem.Title>
         <ListItem.Subtitle numberOfLines={1} ellipsizeMode='tail' >
-          ABC
+          {chatMessages[0]?.displayName}: {chatMessages[0]?.message}
         </ListItem.Subtitle>
       </ListItem.Content>
     </ListItem>
