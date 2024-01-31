@@ -125,17 +125,44 @@ const ChatScreen = ({navigation, route}) => {
       >
         <Pressable onPress={Keyboard.dismiss}>
           <>
-            <ScrollView>
+            <ScrollView contentContainerStyle={styles.inner}>
               {messages.map(({ id, data }) => (
                 data.email === auth.currentUser.email ? (
-                  <View key={id}>
-                    <Avatar />
+                  <View key={id} style={styles.receiver}>
+                    <Avatar
+                      position="absolute"
+                      rounded
+                      // Web View
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -15,
+                        right: -5,
+                      }}
+                      bottom={-15}
+                      right={-5}
+                      size={30} 
+                      source={{ uri: data.photoURL }}
+                    />
                     <Text style={styles.receiverText}>{data.message}</Text>
                   </View>
                 ) : (
-                  <View>
-                    <Avatar />
+                  <View style={styles.sender}>
+                    <Avatar
+                      position="absolute"
+                      rounded
+                      // Web View
+                      containerStyle={{
+                        position: "absolute",
+                        bottom: -15,
+                        left: -5,
+                      }}
+                      bottom={-15}
+                      left={-5}
+                      size={30} 
+                      source={{ uri: data.photoURL }}
+                    />
                     <Text style={styles.senderText}>{data.message}</Text>
+                    <Text style={styles.senderName}>{data.displayName}</Text>
                   </View>
                 )
               ))}
@@ -165,7 +192,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    // justifyContent: "center",
+    justifyContent: "center",
   
   },
   sender: {
@@ -202,7 +229,6 @@ const styles = StyleSheet.create({
   receiverText: {
     color: "black",
     fontWeight: "500",
-    marginLeft: 10,
   },
   inner: {
     paddingTop: 15,
