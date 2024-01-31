@@ -4,10 +4,10 @@
     "slug": "chat-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/chattyicon.png",
+    "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {
-      "image": "./assets/chattysplash.jpg",
+      "image": "./assets/splash.jpg",
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -19,12 +19,12 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/chattyadpative-icon.png",
+        "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       }
     },
     "web": {
-      "favicon": "./assets/chattyfavicon.png",
+      "favicon": "./assets/favicon.png",
       "output": "server",
       "bundler": "metro"
     }
