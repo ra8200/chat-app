@@ -40,7 +40,7 @@ const CustomListItem = ({ id, chatName, enterChat }) => {
         rounded
         source={{
           uri:
-            chatMessages[0]?.data.photoURL ||
+            chatMessages[0]?.photoURL ||
             'https://vectorified.com/images/default-user-icon-34.png',
         }}
       />
