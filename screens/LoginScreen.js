@@ -44,7 +44,7 @@ const LoginScreen = ({ navigation }) => {
     >
       <StatusBar style='auto' />
       <Image 
-        source={require('../assets/chattylogo.png')}
+        source={require('../assets/logo.png')}
         alt='Logo'
         style={styles.logo} 
       />
